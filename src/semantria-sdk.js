@@ -71,7 +71,7 @@ Session.prototype = {
 	 * @var {String} SDK_VERSION
 	 * @constant
 	 */
-	SDK_VERSION: require('./package').version,
+	SDK_VERSION: require('../package').version,
 
 	/**
 	 * @var {String} X_API_VERSION

@@ -1,4 +1,4 @@
-var SemantriaSession = require("../").Session;
+var SemantriaSession = require("../src/semantria-sdk").Session;
 var promise = require('promise');
 var config = require('../test-config');
 try { config = require('../test-config.override') } catch(e) {}

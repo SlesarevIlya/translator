@@ -3,10 +3,17 @@
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
+  
   "dependencies": {
-    "express": "^4.14.0"
+    "express": "^4.14.0",
+	"crypto": "*",
+	"request": "*",
+	"promise": "*",
+	"request-sync": "*"
   },
-  "devDependencies": {},
+  "devDependencies": {
+	"mocha": "*"
+  },
   "scripts": {
     "test": "mocha"
   },
