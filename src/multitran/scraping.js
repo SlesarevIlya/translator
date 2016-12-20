@@ -20,7 +20,7 @@ needle.get(URL, (err, res) => {
      });
      */
 
-    $('.morelangs>a').each(function() {
+    $('.morelangs>a').each(() => {
         if (this.children.length != 0) {
             let language = this.children[0].data;
             let link = $(this).attr('href');
