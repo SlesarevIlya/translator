@@ -6,21 +6,20 @@ var cheerio = require('cheerio');
 var URL = 'http://www.multitran.com/m.exe?a=1&all=1&l1=1';
 var languages = [];
 
-needle.get(URL, (err, res) => {
+needle.get(URL, function(err, res) {
     if (err) throw err;
 
     var $ = cheerio.load(res.body);
     /*
-     $('select[id="l1"] option').each(function() {
+    $('select[id="l1"] option').each(function() {
+        languages.push({
+            name: this.children[0].data,
+            value: +this.attribs.value
+        });
+    });
+    */
 
-     languages.push({
-     name: this.children[0].data,
-     value: +this.attribs.value
-     });
-     });
-     */
-
-    $('.morelangs>a').each(() => {
+    $('.morelangs>a').each(function() {
         if (this.children.length != 0) {
             let language = this.children[0].data;
             let link = $(this).attr('href');
@@ -34,7 +33,7 @@ needle.get(URL, (err, res) => {
 
     });
 
-    languages.sort((a, b) => {
+    languages.sort(function(a, b) {
         return (a.value > b.value) ? 1 : ((b.value > a.value) ? -1 : 0)
     });
     console.log(languages);
