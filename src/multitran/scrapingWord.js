@@ -3,6 +3,10 @@
 var needle = require('needle');
 var cheerio = require('cheerio');
 
+var sys = require('system');
+var page = require('webpage').create();
+var siteUrl = 'http://www.multitran.ru/c/m.exe?CL=1&s=car&l1=1';
+
 var URL = 'http://www.multitran.ru/c/m.exe?CL=1&s=car&l1=1';
 var words = [];
 
@@ -11,6 +15,11 @@ needle.get(URL, (err, res) => {
 
     var $ = cheerio.load(res.body);
 
+    let regexp = /(\d{1,2}):?-?\/?(\d{1,2}):?-?\/?((20)?\d{2})/;
+    let regexp2 = /(<table border="0" cellspacing="0" cellpadding="0">)*(<a name="phrases"><\/a>)/;
+    let regexp3 = /(<table)*(<\/a)/;
+
+    let text = res.body;
     $('a').each(() => {
         let tmp = 1;
 
