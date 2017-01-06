@@ -54,6 +54,7 @@ class Scraping {
 
     /*
      @param {String} - example 'http://www.multitran.ru/c/m.exe?CL=1&s=car&l1=1'
+     @param {String} - word to translate
      @return {Array<Object>} - List of languages
         Object - {
          name:
@@ -61,7 +62,7 @@ class Scraping {
         }
      */
 
-    static getWords(URL) {
+    static getWords(URL, translateWord) {
 
         let words = [];
 
@@ -79,25 +80,61 @@ class Scraping {
                 return table[0].substring(0, indexEnd);
             };
             let table = getTable(text);
-            console.log(table);
+            let dictionary = [];
 
             let getListOfWords = (table) => {
-                console.log(table);
-                let regexp = /"*"/;
-                let word = regexp.exec(table);
-                console.log(word);
+                let pos = 0;
+                let endOfFile = table.indexOf("<td bgcolor=\"#DBDBDB\" colspan=\"2\" width=\"700\">", 150);
+                table = table.substring(0, endOfFile);
+
+                while (true) {
+                    let titleStr = "title=\"";
+                    let startPosTitle = table.indexOf(titleStr, pos);
+                    //if not found title
+                    if (startPosTitle == -1) {
+
+                        break;
+                    }
+                    startPosTitle += titleStr.length; //start index Title
+                    let endPosTitle = table.indexOf("\"", startPosTitle); //end index Title
+                    let titleTr = table.substring(startPosTitle, endPosTitle); //Title
+                    pos = endPosTitle + 1;
+                    console.log(titleTr);
+
+                    //if not found next title then index = end of dict
+                    let nextTitle = table.indexOf(titleStr, pos);
+                    if (nextTitle == -1) {
+                        nextTitle = endOfFile;
+                    }
+
+                    let wordsTr = [];
+                    while (pos < nextTitle) {
+                        let wordStr = "=" + translateWord;
+                        let startPosWord = table.indexOf(wordStr, pos);
+
+                        if (startPosWord == -1) {
+
+                            break;
+                        }
+
+                        startPosWord += translateWord.length + 3; //start index Word
+                        let endPosWord = table.indexOf("<", startPosWord); //end index Word
+                        let wordTr = table.substring(startPosWord, endPosWord); //Word
+                        pos = endPosWord + 1;
+                        wordsTr.push(wordTr);
+                        console.log("------" + wordTr);
+                    }
+
+                    dictionary.push({
+                        title: titleTr, //title translated
+                        word: wordsTr //words translated
+                    });
+                }
+
+                //console.log(dictionary);
             };
 
-            let pos = 0;
-            while (false) {
-                let foundPos = table.indexOf("title=\"", pos);
-                if (foundPos == -1) {
-                    break;
-                }
-            }
-
-            //words = table;
-            console.log(words);
+            getListOfWords(table);
         });
 
         return words;
@@ -107,5 +144,5 @@ class Scraping {
 module.exports = Scraping;
 
 //let a = Scraping.getLanguages("http://www.multitran.com/m.exe?a=1&all=1&l1=1");
-let a = Scraping.getWords("http://www.multitran.ru/c/m.exe?CL=1&s=car&l1=1");
+let a = Scraping.getWords("http://www.multitran.ru/c/m.exe?CL=1&s=car&l1=1", "car");
 //console.log(a);
