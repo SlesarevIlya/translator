@@ -17,8 +17,9 @@ class Scraping {
         }
     */
 
-    static getLanguages(URL) {
+    static getLanguages() {
 
+        let URL = 'http://www.multitran.com/m.exe?a=1&all=1&l1=1';
         let languages = [];
 
         needle.get(URL, function(err, res) {
@@ -68,21 +69,43 @@ class Scraping {
             if (err) throw err;
 
             let text = res.body;
-            let regexp = /<table border="0" cellspacing="0" cellpadding="0">\s*<tr><td bgcolor="#DBDBDB" colspan="2" width="700">&nbsp;(.|\s)*/;
-            let findEnd = "<a name=\"phrases\"></a>";
+            let getTable = (text) => {
+                let regexp = /<table border="0" cellspacing="0" cellpadding="0">\s*<tr><td bgcolor="#DBDBDB" colspan="2" width="700">&nbsp;(.|\s)*/;
+                let findEnd = "<a name=\"phrases\"></a>";
 
-            let table = regexp.exec(text);
-            let indexEnd = table[0].indexOf(findEnd);
+                let table = regexp.exec(text);
+                let indexEnd = table[0].indexOf(findEnd);
 
-            table = table[0].substring(0, indexEnd);
+                return table[0].substring(0, indexEnd);
+            };
+            let table = getTable(text);
             console.log(table);
 
-            let $ = cheerio.load(table);
-        });
-    }
+            let getListOfWords = (table) => {
+                console.log(table);
+                let regexp = /"*"/;
+                let word = regexp.exec(table);
+                console.log(word);
+            };
 
+            let pos = 0;
+            while (false) {
+                let foundPos = table.indexOf("title=\"", pos);
+                if (foundPos == -1) {
+                    break;
+                }
+            }
+
+            //words = table;
+            console.log(words);
+        });
+
+        return words;
+    }
 }
 
-scrapingLanguages.getLanguages();
-module.exports = scrapingLanguages;
+module.exports = Scraping;
 
+//let a = Scraping.getLanguages("http://www.multitran.com/m.exe?a=1&all=1&l1=1");
+let a = Scraping.getWords("http://www.multitran.ru/c/m.exe?CL=1&s=car&l1=1");
+//console.log(a);
