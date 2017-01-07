@@ -1,10 +1,7 @@
 "use strict";
-//use https://habrahabr.ru/post/301426/
 
 const needle = require('needle');
 const cheerio = require('cheerio');
-
-//const URL = 'http://www.multitran.com/m.exe?a=1&all=1&l1=1';
 
 class Scraping {
 
@@ -19,7 +16,6 @@ class Scraping {
 
     static getLanguages(URL) {
 
-        let languages = [];
         let promise = new Promise((resolve, reject) => {
 
             needle.get(URL, (err, res) => {
@@ -28,6 +24,7 @@ class Scraping {
                 }
 
                 let $ = cheerio.load(res.body);
+                let languages = [];
 
                 $('.morelangs>a').each(function() {
                     if (this.children.length != 0) {
@@ -65,7 +62,6 @@ class Scraping {
 
     static getWords(URL, translateWord) {
 
-        let words = [];
         let promise = new Promise((resolve, reject) => {
 
             needle.get(URL, (err, res) => {
