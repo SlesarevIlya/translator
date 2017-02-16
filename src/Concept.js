@@ -17,7 +17,7 @@ class Concept {
         /*
          request example
          concept.research.microsoft.com/api/Concept/ScoreByProb?instance=microsoft&topK=10&api_key={YOUR API-KEY HERE}
-         */
+        */
         let URL =  "https://concept.research.microsoft.com/api/Concept/ScoreByProb?";
         let topK = "5";
         let api_key = "ehUUyRtEhfoOEwqXruoFwcne8lh7S1OV";
@@ -55,6 +55,15 @@ class Concept {
 
 module.exports = Concept;
 
-Concept.getConcepts("microsoft").then((concepts) => {
+Concept.getConcepts("car").then((concepts) => {
     console.log(concepts);
 });
+
+/*
+ example output:
+ [ { name: 'vehicle', value: '0.28031257877489285' },
+ { name: 'item', value: '0.23670279808419462' },
+ { name: 'product', value: '0.16460801613309806' },
+ { name: 'asset', value: '0.16057474161835139' },
+ { name: 'object', value: '0.15780186538946306' } ]
+ */
