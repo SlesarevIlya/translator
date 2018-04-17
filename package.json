@@ -5,9 +5,8 @@
   "main": "app.js",
   "dependencies": {},
   "devDependencies": {
-    "cheerio": "*",
-    "needle": "^2.2.0",
-    "promise": "*"
+    "cheerio": "^0.22.0",
+    "needle": "^2.2.0"
   },
   "repository": {
     "type": "git",

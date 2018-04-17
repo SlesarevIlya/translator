@@ -1,25 +1,20 @@
 "use strict";
 
 const needle = require("needle");
-const cheerio = require('cheerio');
+const cheerio = require("cheerio");
 
 const getLanguages = (URL) => {
+    needle("get", URL)
+        .then((resp) => {
+            const $ = cheerio.load(resp.body);
+            const languages = [];
 
-    const promise = new Promise((resolve, reject) => {
-
-        needle.get(URL, (err, res) => {
-            if (err) {
-                reject(err);
-            }
-
-            let $ = cheerio.load(res.body);
-            let languages = [];
-
-            $('.morelangs>a').each(function() {
+            $(".morelangs>a").each(function() {
                 if (this.children.length !== 0) {
-                    let language = this.children[0].data;
-                    let link = $(this).attr('href');
-                    let number = +link.substring(link.indexOf('&l1') + 4, link.indexOf('&l2'));
+                    const language = this.children[0].data;
+                    const link = $(this).attr("href");
+                    // link for arabic language, for example, " /m.exe?l1=10 "
+                    const number = +link.substring(link.indexOf("l1") + 3);
 
                     languages.push({
                         name: this.next == null ? language : language + " " + this.next.next.children[0].data, // transliteration
@@ -28,15 +23,16 @@ const getLanguages = (URL) => {
                 }
             });
 
-            languages.sort((a, b) => {
+            return languages.sort((a, b) => {
                 return (a.value > b.value) ? 1 : ((b.value > a.value) ? -1 : 0)
             });
-
-            resolve(languages);
+        })
+        .then((languages) => {
+            console.log(languages);
+        })
+        .catch((err) => {
+            console.log(err);
         });
-    });
-
-    return promise;
 };
 
 const getWords = (URL, translateWord) => {
@@ -109,7 +105,6 @@ const getTable = (text) => {
 
     return table[0].substring(0, indexEndLine);
 };
-
 
 module.exports.getLanguages = getLanguages;
 module.exports.getWords = getWords;
