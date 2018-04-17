@@ -2,6 +2,8 @@
 
 const needle = require("needle");
 const cheerio = require("cheerio");
+const { URL } = require('url');
+const punycode = require('punycode');
 
 const getLanguages = () => {
     const URL = "https://www.multitran.com/m.exe?a=1&SHL=1";
@@ -18,7 +20,7 @@ const getLanguages = () => {
                     const number = +link.substring(link.indexOf("l1") + 3);
 
                     languages.push({
-                        name: this.next == null ? language : language + " " + this.next.next.children[0].data, // transliteration
+                        name: (this.next == null ? language : language + " " + this.next.next.children[0].data).toLowerCase(), // transliteration
                         value: number
                     });
                 }
@@ -31,11 +33,21 @@ const getLanguages = () => {
         });
 };
 
-const getWords = (URL, translateWord) => {
-    return needle("get", URL)
-        .then((resp) => {
-            const table = getTable(resp.body);
-            return getListOfWords(table, translateWord);
+const getWords = (word, l1Name, l2Name) => {
+    getLanguages()
+        .then(languages => {
+            const l1Index = languages.find(language => language.name === l1Name).value;
+            const l2Index = languages.find(language => language.name === l2Name).value;
+            const newWord = encodeURIComponent(word);
+            const url = `https://www.multitran.ru/c/m.exe?l1=${l1Index}&l2=${l2Index}&s=${newWord}`;
+            console.log(url);
+            return needle("get", url);
+        })
+        .then(response => {
+            //console.log(response.body);
+            const table = getTable(response.body);
+            //console.log(table);
+            console.log(getListOfWords(table, word));
         })
         .catch((err) => {
             console.log(err);
