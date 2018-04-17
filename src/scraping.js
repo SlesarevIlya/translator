@@ -23,9 +23,7 @@ const getLanguages = (URL) => {
                 }
             });
 
-            return languages.sort((a, b) => {
-                return (a.value > b.value) ? 1 : ((b.value > a.value) ? -1 : 0)
-            });
+            return languages.sort((a, b) => a.value - b.value);
         })
         .then((languages) => {
             console.log(languages);
