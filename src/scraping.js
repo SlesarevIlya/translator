@@ -3,8 +3,9 @@
 const needle = require("needle");
 const cheerio = require("cheerio");
 
-const getLanguages = (URL) => {
-    needle("get", URL)
+const getLanguages = () => {
+    const URL = "https://www.multitran.com/m.exe?a=1&SHL=1";
+    return needle("get", URL)
         .then((resp) => {
             const $ = cheerio.load(resp.body);
             const languages = [];
@@ -25,22 +26,16 @@ const getLanguages = (URL) => {
 
             return languages.sort((a, b) => a.value - b.value);
         })
-        .then((languages) => {
-            console.log(languages);
-        })
         .catch((err) => {
             console.log(err);
         });
 };
 
 const getWords = (URL, translateWord) => {
-    needle("get", URL)
+    return needle("get", URL)
         .then((resp) => {
             const table = getTable(resp.body);
             return getListOfWords(table, translateWord);
-        })
-        .then((dictionary) => {
-            console.log(dictionary); // do something with dictionary
         })
         .catch((err) => {
             console.log(err);
