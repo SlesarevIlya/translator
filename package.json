@@ -2,11 +2,14 @@
   "name": "translator",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "main.js",
   "dependencies": {},
   "devDependencies": {
     "cheerio": "^0.22.0",
     "needle": "^2.2.0"
+  },
+  "scripts": {
+    "start": "node ./src/main.js"
   },
   "repository": {
     "type": "git",
